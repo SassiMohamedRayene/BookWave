@@ -17,7 +17,6 @@ import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SearchScreen(navController: NavController){
-
     Scaffold(
         topBar = {},
         bottomBar = {BottomNavigationBar(
