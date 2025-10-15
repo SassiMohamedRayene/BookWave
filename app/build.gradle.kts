@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -63,19 +65,116 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
 
-    // Compose
-    implementation("androidx.compose.ui:ui:1.5.4")
-    implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
 
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.5")
 
-    // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
-    // Coil for images
+
+
+
+    // ============================================
+    // COMPOSE BOM - Gère toutes les versions Compose
+    // ============================================
+    val composeBom = platform("androidx.compose:compose-bom:2024.02.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
+
+    // ============================================
+    // COMPOSE UI
+    // ============================================
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    // Material Icons Extended (pour plus d'icônes)
+    implementation("androidx.compose.material:material-icons-extended")
+
+    // Pour le debug et preview
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // ============================================
+    // CORE ANDROID
+    // ============================================
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // ============================================
+    // VIEWMODEL & LIFECYCLE
+    // ============================================
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
+    // ============================================
+    // COROUTINES
+    // ============================================
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    // ============================================
+    // IMAGE LOADING - COIL
+    // ============================================
     implementation("io.coil-kt:coil-compose:2.5.0")
 
+    // ============================================
+    // FIREBASE (Pour utilisation future)
+    // ============================================
+    // Décommenter ces lignes quand vous serez prêt à intégrer Firebase
+    /*
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    */
+
+    // ============================================
+    // NETWORKING (Pour API REST future)
+    // ============================================
+    // Retrofit pour les appels API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp pour logging réseau
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // ============================================
+    // MEDIA PLAYER (Pour l'audio)
+    // ============================================
+    implementation("androidx.media3:media3-exoplayer:1.2.1")
+    implementation("androidx.media3:media3-ui:1.2.1")
+    implementation("androidx.media3:media3-session:1.2.1")
+
+    // ============================================
+    // PREFERENCES DATASTORE (Pour stockage local)
+    // ============================================
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // ============================================
+    // SPLASH SCREEN API
+    // ============================================
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // ============================================
+    // TESTING
+    // ============================================
+    // Unit tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.mockito:mockito-core:5.8.0")
+
+    // Android tests
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    
+
 }
+

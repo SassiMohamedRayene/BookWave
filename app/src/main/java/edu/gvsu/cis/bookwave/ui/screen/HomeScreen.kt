@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
@@ -27,16 +28,20 @@ import androidx.navigation.NavController
 import edu.gvsu.cis.bookwave.R
 import androidx.compose.material3.Divider
 import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
-
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Divider
+import edu.gvsu.cis.bookwave.data.BooksData
+import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
+import edu.gvsu.cis.bookwave.navigation.Routes
+import edu.gvsu.cis.bookwave.ui.components.BooksLazyRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavController){
 
-
     Scaffold(
-
         topBar = {
             Column {
                 CenterAlignedTopAppBar(
@@ -47,7 +52,6 @@ fun HomeScreen(navController: NavController){
                             IconButton(onClick = {}) {
                                 Icon(Icons.Default.Menu, contentDescription = "")
                             }
-                            // Ligne verticale après l'icône menu
                             Divider(
                                 color = Color.Black,
                                 modifier = Modifier
@@ -63,7 +67,6 @@ fun HomeScreen(navController: NavController){
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            // Ligne verticale avant l'image
                             Divider(
                                 color = Color.Black,
                                 modifier = Modifier
@@ -72,7 +75,7 @@ fun HomeScreen(navController: NavController){
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.eminem),
-                                contentDescription = "dog",
+                                contentDescription = "Profile",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp)
@@ -83,41 +86,75 @@ fun HomeScreen(navController: NavController){
                         }
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFFF5E6D3) // Couleur beige comme dans l'image
+                        containerColor = Color(0xFFF5E6D3)
                     )
                 )
-                // Ligne horizontale noire sous le TopAppBar
                 Divider(
                     color = Color.Black,
                     thickness = 1.dp
                 )
             }
         },
-
         bottomBar = {
-            BottomNavigationBar(
-                navController = navController
-            )
+            BottomNavigationBar(navController = navController)
         }
-    ) {
+    ) { paddingValues ->
 
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
 
-          Column (
-      modifier = Modifier
-          .fillMaxSize()
-          .padding(8.dp),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
+                // Section Title
+                Text(
+                    text = "Popular Audiobooks",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
 
-  ){
-      Text(
-          text = "This is HomeScreen "
-      )
-  }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
+            item {
+                // Books LazyRow
+                BooksLazyRow(
+                    books = BooksData.myBooks,
+                    onBookClick = { book ->
+                        navController.navigate("${Routes.BOOK_DETAILS_SCREEN}/${book.id}")
+                    }
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Section Title
+                Text(
+                    text = "Recently Added",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            item {
+                // Another LazyRow (same books for demo)
+                BooksLazyRow(
+                    books = BooksData.myBooks.reversed(),
+                    onBookClick = { book ->
+                        navController.navigate("${Routes.BOOK_DETAILS_SCREEN}/${book.id}")
+                    }
+                )
+            }
+        }
     }
 }
-
 
 
 

@@ -6,6 +6,5 @@ object Routes {
     const val FAVORITE_SCREEN = "favorite_screen"
     const val ACCOUNT_SCREEN = "account_screen"
     const val SEARCH_SCREEN = "search_screen"
-
-
+    const val BOOK_DETAILS_SCREEN = "book_details_screen" // NOUVEAU
 }
