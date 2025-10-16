@@ -17,7 +17,7 @@ object BooksData {
             rating = 4.5f,
             publishedYear = 1925,
             isFavorite = false,
-            coverImageRes = R.drawable.eminem // Temporaire
+            coverImageRes = R.drawable.coverbook
         ),
         Book(
             id = 2,
@@ -31,7 +31,7 @@ object BooksData {
             rating = 4.8f,
             publishedYear = 1949,
             isFavorite = true,
-            coverImageRes = R.drawable.eminem
+            coverImageRes = R.drawable.book_cover
         ),
         Book(
             id = 3,
@@ -45,7 +45,7 @@ object BooksData {
             rating = 4.7f,
             publishedYear = 1960,
             isFavorite = false,
-            coverImageRes = R.drawable.eminem
+            coverImageRes = R.drawable.coverbook2
         ),
         Book(
             id = 4,
@@ -59,7 +59,7 @@ object BooksData {
             rating = 4.6f,
             publishedYear = 1813,
             isFavorite = true,
-            coverImageRes = R.drawable.eminem
+            coverImageRes = R.drawable.coverbook1
         ),
         Book(
             id = 5,
@@ -73,7 +73,7 @@ object BooksData {
             rating = 4.9f,
             publishedYear = 1937,
             isFavorite = false,
-            coverImageRes = R.drawable.eminem
+            coverImageRes = R.drawable.coverbook3
         )
     )
 }

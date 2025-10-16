@@ -1,6 +1,7 @@
 package edu.gvsu.cis.bookwave.ui.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +26,7 @@ import edu.gvsu.cis.bookwave.navigation.Routes
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AccountScreen(navController: NavController){
+fun MessageScreen(navController: NavController){
     Scaffold(
         topBar = {
             Column {
@@ -38,16 +39,10 @@ fun AccountScreen(navController: NavController){
                                 Icon(Icons.Default.ArrowBack, contentDescription = "")
                             }
                             // Ligne verticale après l'icône menu
-                            Divider(
-                                color = Color.Black,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                            )
                         }
                     },
                     title = {
-                        Text(text = "Account")
+                        Text(text = "Message")
                     },
 
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -69,13 +64,14 @@ fun AccountScreen(navController: NavController){
         Column (
             modifier = Modifier
                 .fillMaxSize()
+                .background(color = Color(0xFFF5E6D3))
                 .padding(8.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
 
         ){
             Text(
-                text = "This is Account Screen "
+                text = "This is Message Screen "
             )
         }
     }

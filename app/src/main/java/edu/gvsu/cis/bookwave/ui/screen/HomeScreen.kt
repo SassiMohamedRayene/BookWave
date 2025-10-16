@@ -2,44 +2,42 @@ package edu.gvsu.cis.bookwave.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.*
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import edu.gvsu.cis.bookwave.R
-import androidx.compose.material3.Divider
-import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Divider
-import edu.gvsu.cis.bookwave.data.BooksData
 import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
 import edu.gvsu.cis.bookwave.navigation.Routes
 import edu.gvsu.cis.bookwave.ui.components.BooksLazyRow
+import edu.gvsu.cis.bookwave.viewmodel.BooksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(
+    navController: NavController,
+    viewModel: BooksViewModel = viewModel()
+) {
+    val books by viewModel.books.collectAsState()
 
     Scaffold(
         topBar = {
@@ -52,27 +50,22 @@ fun HomeScreen(navController: NavController){
                             IconButton(onClick = {}) {
                                 Icon(Icons.Default.Menu, contentDescription = "")
                             }
-                            Divider(
-                                color = Color.Black,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                            )
                         }
                     },
                     title = {
-                        Text(text = "BookWave")
+                        Text(text = "BookWave",
+                            style = TextStyle(
+                            fontSize = 28.sp,
+                            color = Color.Black,
+                            fontFamily = FontFamily.Monospace,
+                            letterSpacing = (-0.5).sp
+                        ),
+                            )
                     },
                     actions = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Divider(
-                                color = Color.Black,
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .width(1.dp)
-                            )
                             Image(
                                 painter = painterResource(id = R.drawable.eminem),
                                 contentDescription = "Profile",
@@ -89,7 +82,7 @@ fun HomeScreen(navController: NavController){
                         containerColor = Color(0xFFF5E6D3)
                     )
                 )
-                Divider(
+                HorizontalDivider(
                     color = Color.Black,
                     thickness = 1.dp
                 )
@@ -104,15 +97,20 @@ fun HomeScreen(navController: NavController){
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .background(Color(0xFFF5E6D3))
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
-                // Section Title
                 Text(
                     text = "Popular Audiobooks",
                     fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        color = Color.Black,
+                        fontFamily = FontFamily.Monospace,
+                        letterSpacing = (-0.5).sp
+                    ),
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
@@ -120,9 +118,8 @@ fun HomeScreen(navController: NavController){
             }
 
             item {
-                // Books LazyRow
                 BooksLazyRow(
-                    books = BooksData.myBooks,
+                    books = books,
                     onBookClick = { book ->
                         navController.navigate("${Routes.BOOK_DETAILS_SCREEN}/${book.id}")
                     }
@@ -132,11 +129,15 @@ fun HomeScreen(navController: NavController){
             item {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Section Title
                 Text(
                     text = "Recently Added",
                     fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        color = Color.Black,
+                        fontFamily = FontFamily.Monospace,
+                        letterSpacing = (-0.5).sp
+                    ),
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
 
@@ -144,9 +145,8 @@ fun HomeScreen(navController: NavController){
             }
 
             item {
-                // Another LazyRow (same books for demo)
                 BooksLazyRow(
-                    books = BooksData.myBooks.reversed(),
+                    books = books.reversed(),
                     onBookClick = { book ->
                         navController.navigate("${Routes.BOOK_DETAILS_SCREEN}/${book.id}")
                     }
@@ -155,6 +155,3 @@ fun HomeScreen(navController: NavController){
         }
     }
 }
-
-
-

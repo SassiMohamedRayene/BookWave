@@ -11,7 +11,7 @@ data class Book(
     val category: String,
     val rating: Float = 0f,
     val publishedYear: Int,
-    var isFavorite: Boolean = false,
-    val coverImageRes: Int // AJOUT pour utiliser des ressources locales
+    val isFavorite: Boolean = false,
+    val coverImageRes: Int
 )
 

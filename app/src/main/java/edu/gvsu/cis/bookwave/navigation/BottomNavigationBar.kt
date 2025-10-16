@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,7 +33,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 data class BottomNavItem(
     val route: String,
     val icon: ImageVector,
-    val label: String
+    val label: String,
+    val rotation: Float = 0f
 )
 
 @Composable
@@ -40,7 +43,7 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem(Routes.HOME_SCREEN, Icons.Default.Home, "Home"),
         BottomNavItem(Routes.SEARCH_SCREEN, Icons.Default.Search, "Search"),
         BottomNavItem(Routes.FAVORITE_SCREEN, Icons.Default.BookmarkBorder, "Favorite"),
-        BottomNavItem(Routes.ACCOUNT_SCREEN, Icons.Default.AccountCircle, "Account")
+        BottomNavItem(Routes.MESSAGE_SCREEN, Icons.Default.Send, "Message", rotation = -45f)
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -58,7 +61,13 @@ fun BottomNavigationBar(navController: NavController) {
         ) {
             items.forEach { item ->
                 NavigationBarItem(
-                    icon = { Icon(item.icon, contentDescription = item.label) },
+                    icon = {
+                        Icon(
+                            item.icon,
+                            contentDescription = item.label,
+                            modifier = Modifier.graphicsLayer(rotationZ = item.rotation)
+                        )
+                    },
                     label = { Text(item.label) },
                     selected = currentRoute == item.route,
                     onClick = {

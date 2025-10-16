@@ -22,26 +22,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import edu.gvsu.cis.bookwave.data.BooksData
+import edu.gvsu.cis.bookwave.viewmodel.BooksViewModel
+import edu.gvsu.cis.bookwave.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailsScreen(
     navController: NavController,
-    bookId: Int
+    bookId: Int,
+    viewModel: BooksViewModel = viewModel()
 ) {
-    val book = BooksData.myBooks.find { it.id == bookId }
+    val books by viewModel.books.collectAsState()
+    val book = books.find { it.id == bookId }
 
     if (book == null) {
-        // Si le livre n'est pas trouvé, retour en arrière
         LaunchedEffect(Unit) {
             navController.popBackStack()
         }
         return
     }
 
-    var isFavorite by remember { mutableStateOf(book.isFavorite) }
+    val isFavorite = book.isFavorite
 
     Scaffold(
         topBar = {
@@ -56,7 +59,9 @@ fun BookDetailsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { isFavorite = !isFavorite }) {
+                    IconButton(onClick = {
+                        viewModel.toggleFavorite(bookId)
+                    }) {
                         Icon(
                             imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                             contentDescription = "Favorite",
@@ -76,7 +81,6 @@ fun BookDetailsScreen(
                 .padding(paddingValues)
         ) {
             item {
-                // Cover Image Header
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -103,7 +107,6 @@ fun BookDetailsScreen(
                             )
                     )
 
-                    // Play Button
                     Surface(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -113,7 +116,7 @@ fun BookDetailsScreen(
                         shadowElevation = 8.dp
                     ) {
                         IconButton(
-                            onClick = { /* Play audio */ },
+                            onClick = { navController.navigate("${Routes.PLAYER_SCREEN}/${bookId}") },
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Icon(
@@ -133,7 +136,6 @@ fun BookDetailsScreen(
                         .fillMaxWidth()
                         .padding(24.dp)
                 ) {
-                    // Title
                     Text(
                         text = book.title,
                         fontSize = 28.sp,
@@ -143,7 +145,6 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Author
                     Text(
                         text = "by ${book.author}",
                         fontSize = 18.sp,
@@ -152,7 +153,6 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Stats Row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
@@ -177,7 +177,6 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Category
                     Surface(
                         shape = RoundedCornerShape(12.dp),
                         color = MaterialTheme.colorScheme.primaryContainer
@@ -193,7 +192,6 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Description Title
                     Text(
                         text = "Description",
                         fontSize = 20.sp,
@@ -203,7 +201,6 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Description Text
                     Text(
                         text = book.description,
                         fontSize = 16.sp,
@@ -213,13 +210,12 @@ fun BookDetailsScreen(
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // Action Buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Button(
-                            onClick = { /* Start listening */ },
+                            onClick = { navController.navigate("${Routes.PLAYER_SCREEN}/${bookId}") },
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(12.dp)
                         ) {
