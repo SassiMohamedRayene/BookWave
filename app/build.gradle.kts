@@ -1,9 +1,18 @@
 import org.gradle.kotlin.dsl.implementation
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+}
+
+// Charger les propriétés locales pour la clé API
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -18,6 +27,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Ajouter la clé API Gemini dans BuildConfig
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${localProperties.getProperty("GEMINI_API_KEY", "")}\""
+        )
     }
 
     buildTypes {
@@ -38,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -64,12 +81,6 @@ dependencies {
     val nav_version = "2.9.5"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
-
-
-
-
-
-
 
     // ============================================
     // COMPOSE BOM - Gère toutes les versions Compose
@@ -163,6 +174,11 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // ============================================
+    // GEMINI AI SDK - Pour le Chatbot
+    // ============================================
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    // ============================================
     // TESTING
     // ============================================
     // Unit tests
@@ -174,11 +190,4 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-    
-
 }
-

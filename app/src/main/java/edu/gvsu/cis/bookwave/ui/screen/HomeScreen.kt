@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,12 +56,12 @@ fun HomeScreen(
                     title = {
                         Text(text = "BookWave",
                             style = TextStyle(
-                            fontSize = 28.sp,
-                            color = Color.Black,
-                            fontFamily = FontFamily.Monospace,
-                            letterSpacing = (-0.5).sp
-                        ),
-                            )
+                                fontSize = 28.sp,
+                                color = Color.Black,
+                                fontFamily = FontFamily.Monospace,
+                                letterSpacing = (-0.5).sp
+                            ),
+                        )
                     },
                     actions = {
                         Row(
@@ -90,6 +91,19 @@ fun HomeScreen(
         },
         bottomBar = {
             BottomNavigationBar(navController = navController)
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate(Routes.CHATBOT_SCREEN) },
+                containerColor = Color(0xFF6B4226),
+                contentColor = Color.White,
+                modifier = Modifier.padding(bottom = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SmartToy,
+                    contentDescription = "AI Chatbot"
+                )
+            }
         }
     ) { paddingValues ->
 

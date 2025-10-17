@@ -8,5 +8,7 @@ object Routes {
     const val SEARCH_SCREEN = "search_screen"
     const val BOOK_DETAILS_SCREEN = "book_details_screen"
     const val PLAYER_SCREEN = "player_screen"
+    const val CHATBOT_SCREEN = "chatbot_screen"
+
 
 }

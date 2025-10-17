@@ -53,5 +53,8 @@ fun Nav() {
             val bookId = backStackEntry.arguments?.getInt("bookId") ?: 0
             PlayerScreen(navController, bookId, booksViewModel)
         }
+        composable(route = Routes.CHATBOT_SCREEN) {
+            ChatbotScreen(navController)
+        }
     }
 }
