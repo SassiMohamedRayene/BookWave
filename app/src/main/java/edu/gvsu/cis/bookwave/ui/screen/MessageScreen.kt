@@ -1,78 +1,313 @@
 package edu.gvsu.cis.bookwave.ui.screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.*
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import edu.gvsu.cis.bookwave.R
+import edu.gvsu.cis.bookwave.data.model.Conversation
 import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
 import edu.gvsu.cis.bookwave.navigation.Routes
+import edu.gvsu.cis.bookwave.viewmodel.MessageViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MessageScreen(navController: NavController){
+fun MessageScreen(
+    navController: NavController,
+    viewModel: MessageViewModel = viewModel()
+) {
+    val conversations by viewModel.conversations.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    var isSearchActive by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             Column {
                 CenterAlignedTopAppBar(
                     navigationIcon = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            IconButton(onClick = {navController.navigate(Routes.HOME_SCREEN)}) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "")
-                            }
-                            // Ligne verticale après l'icône menu
+                        IconButton(onClick = { navController.navigate(Routes.HOME_SCREEN) }) {
+                            Icon(
+                                Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = Color.Black
+                            )
                         }
                     },
                     title = {
-                        Text(text = "Message")
+                        if (isSearchActive) {
+                            TextField(
+                                value = searchQuery,
+                                onValueChange = {
+                                    searchQuery = it
+                                    viewModel.searchConversations(it)
+                                },
+                                placeholder = {
+                                    Text(
+                                        "Search conversations...",
+                                        style = TextStyle(
+                                            fontFamily = FontFamily.Monospace,
+                                            fontSize = 16.sp
+                                        )
+                                    )
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color.Transparent,
+                                    unfocusedContainerColor = Color.Transparent,
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                textStyle = TextStyle(
+                                    fontFamily = FontFamily.Monospace,
+                                    fontSize = 16.sp
+                                )
+                            )
+                        } else {
+                            Text(
+                                text = "Messages",
+                                style = TextStyle(
+                                    fontSize = 28.sp,
+                                    color = Color.Black,
+                                    fontFamily = FontFamily.Monospace,
+                                    letterSpacing = (-0.5).sp
+                                )
+                            )
+                        }
                     },
-
+                    actions = {
+                        IconButton(onClick = {
+                            isSearchActive = !isSearchActive
+                            if (!isSearchActive) {
+                                searchQuery = ""
+                                viewModel.searchConversations("")
+                            }
+                        }) {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = Color.Black
+                            )
+                        }
+                    },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFFF5E6D3) // Couleur beige comme dans l'image
+                        containerColor = Color(0xFFF5E6D3)
                     )
                 )
-                // Ligne horizontale noire sous le TopAppBar
-                Divider(
+                HorizontalDivider(
                     color = Color.Black,
                     thickness = 1.dp
                 )
             }
         },
-        bottomBar = {BottomNavigationBar(
-            navController = navController
-        )
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
         }
-    ) {
-        Column (
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .background(color = Color(0xFFF5E6D3))
-                .padding(8.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (conversations.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "No conversations yet",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            color = Color.Black.copy(alpha = 0.6f),
+                            fontFamily = FontFamily.Monospace
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Start chatting with your friends!",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Color.Black.copy(alpha = 0.4f),
+                            fontFamily = FontFamily.Monospace
+                        )
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(conversations) { conversation ->
+                        ConversationItem(
+                            conversation = conversation,
+                            onClick = {
+                                navController.navigate("${Routes.CHAT_SCREEN}/${conversation.user.id}")
+                            }
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = Color.Black.copy(alpha = 0.1f),
+                            thickness = 0.5.dp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 
-        ){
+@Composable
+fun ConversationItem(
+    conversation: Conversation,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Avatar
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFE67E50)),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                text = "This is Message Screen "
+                text = conversation.user.username.first().uppercase(),
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontFamily = FontFamily.Monospace
+                )
             )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        // Content
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = conversation.user.username,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        fontFamily = FontFamily.Monospace
+                    ),
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (conversation.lastMessage != null) {
+                    Text(
+                        text = formatTimestamp(conversation.lastMessage.timestamp),
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            color = Color.Black.copy(alpha = 0.5f),
+                            fontFamily = FontFamily.Monospace
+                        )
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = conversation.lastMessage?.content ?: "No messages yet",
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = if (conversation.unreadCount > 0) Color.Black else Color.Black.copy(alpha = 0.6f),
+                        fontWeight = if (conversation.unreadCount > 0) FontWeight.SemiBold else FontWeight.Normal,
+                        fontFamily = FontFamily.Monospace
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (conversation.unreadCount > 0) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFE67E50)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = conversation.unreadCount.toString(),
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun formatTimestamp(timestamp: Long): String {
+    val now = System.currentTimeMillis()
+    val diff = now - timestamp
+
+    return when {
+        diff < 60000 -> "Now"
+        diff < 3600000 -> "${diff / 60000}m"
+        diff < 86400000 -> "${diff / 3600000}h"
+        diff < 604800000 -> "${diff / 86400000}d"
+        else -> {
+            val sdf = SimpleDateFormat("dd/MM", Locale.getDefault())
+            sdf.format(Date(timestamp))
         }
     }
 }

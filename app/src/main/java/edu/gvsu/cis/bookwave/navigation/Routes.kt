@@ -10,4 +10,5 @@ object Routes {
     const val PLAYER_SCREEN = "player_screen"
     const val CHATBOT_SCREEN = "chatbot_screen"
     const val ACCOUNT_SCREEN = "account_screen"
+    const val CHAT_SCREEN = "chat_screen"
 }
