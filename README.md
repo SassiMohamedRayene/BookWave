@@ -47,7 +47,7 @@ The app follows **MVVM (Model–View–ViewModel)** architecture to ensure:
 
 * **UI Layer:** Jetpack Compose screens
 * **ViewModel Layer:** Handles UI logic and state
-* 
+
 ---
 
 
