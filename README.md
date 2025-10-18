@@ -10,12 +10,12 @@ The app allows users to explore, listen to, and manage audiobooks, with interact
 ---
 ## 🏗️ Current Features
 
-✅ **AudioBook Player** – Users can listen to audiobooks with basic playback controls.
-✅ **Favorites** – Add or remove books from your favorite list.
-✅ **Search System** – Search for books by title or author.
-✅ **Message Screen** – Basic message interface simulation.
-✅ **Chatbot Assistant** – Integrated chatbot powered by **Gemini AI** (API key **not included** in the repository for security reasons).
-✅ **Modern UI** – Fully built using **Jetpack Compose** with clean and responsive layouts.
+✅ **AudioBook Player** – Users can listen to audiobooks with basic playback controls.\n
+✅ **Favorites** – Add or remove books from your favorite list.\n
+✅ **Search System** – Search for books by title or author.\n
+✅ **Message Screen** – Basic message interface simulation.\n
+✅ **Chatbot Assistant** – Integrated chatbot powered by **Gemini AI** (API key **not included** in the repository for security reasons).\n
+✅ **Modern UI** – Fully built using **Jetpack Compose** with clean and responsive layouts.\n
 
 ---
 
