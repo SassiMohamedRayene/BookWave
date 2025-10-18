@@ -25,6 +25,10 @@ fun Nav() {
             HomeScreen(navController, booksViewModel)
         }
 
+        composable(route = Routes.ACCOUNT_SCREEN) {
+            AccountScreen(navController)
+        }
+
         composable(route = Routes.SEARCH_SCREEN) {
             SearchScreen(navController)
         }
@@ -56,5 +60,6 @@ fun Nav() {
         composable(route = Routes.CHATBOT_SCREEN) {
             ChatbotScreen(navController)
         }
+
     }
 }

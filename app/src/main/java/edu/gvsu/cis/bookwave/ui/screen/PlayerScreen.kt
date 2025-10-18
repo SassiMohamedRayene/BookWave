@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -72,8 +73,9 @@ fun PlayerScreen(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF1a1a2e),
-                        Color(0xFF0f0f1e)
+                        Color(0xFFE8D5C4),
+                        Color(0xFFF5E6D3),
+                        Color(0xFFFFF8F0)
                     )
                 )
             )
@@ -83,84 +85,60 @@ fun PlayerScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
         ) {
-            // Top Bar
-            TopAppBar(
-                title = {
-                    Text(
-                        "Now Playing",
-                        color = Color.White
+            // Top Bar - Style Spotify
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.Black,
+                        modifier = Modifier.size(28.dp)
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                actions = {
+                }
+
+                Row {
                     IconButton(onClick = {
                         booksViewModel.toggleFavorite(bookId)
                     }) {
                         Icon(
                             imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                             contentDescription = "Favorite",
-                            tint = if (isFavorite) Color.Red else Color.White
+                            tint = if (isFavorite) Color(0xFFE67E50) else Color.Black,
+                            modifier = Modifier.size(28.dp)
                         )
                     }
-                    IconButton(onClick = { /* More options */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = "More",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Rotating Book Cover
-            val infiniteTransition = rememberInfiniteTransition(label = "rotation")
-            val rotation by infiniteTransition.animateFloat(
-                initialValue = 0f,
-                targetValue = if (isPlaying) 360f else 0f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(10000, easing = LinearEasing),
-                    repeatMode = RepeatMode.Restart
-                ),
-                label = "rotation"
-            )
-
+            // Book Cover - Style Spotify (carré avec coins arrondis)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
+                    .padding(horizontal = 32.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // Shadow circle
-                Box(
+                Card(
                     modifier = Modifier
-                        .size(280.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.3f))
-                )
-
-                // Book cover with rotation
-                Image(
-                    painter = painterResource(id = book.coverImageRes),
-                    contentDescription = book.title,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(260.dp)
-                        .rotate(rotation)
-                        .clip(CircleShape)
-                )
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = book.coverImageRes),
+                        contentDescription = book.title,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -169,15 +147,15 @@ fun PlayerScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 32.dp)
             ) {
                 Text(
                     text = book.title,
-                    fontSize = 24.sp,
+                    fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
+                    color = Color.Black,
+                    fontFamily = FontFamily.Monospace,
+                    letterSpacing = (-0.5).sp
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -185,12 +163,12 @@ fun PlayerScreen(
                 Text(
                     text = book.author,
                     fontSize = 16.sp,
-                    color = Color.White.copy(alpha = 0.7f),
-                    textAlign = TextAlign.Center
+                    color = Color.Black.copy(alpha = 0.7f),
+                    fontFamily = FontFamily.Monospace
                 )
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             // Progress Bar
             Column(
@@ -203,11 +181,14 @@ fun PlayerScreen(
                     onValueChange = { audioViewModel.seekTo(it.toLong()) },
                     valueRange = 0f..duration.toFloat().coerceAtLeast(1f),
                     colors = SliderDefaults.colors(
-                        thumbColor = Color.White,
-                        activeTrackColor = Color(0xFF6C63FF),
-                        inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-                    )
+                        thumbColor = Color.Black,
+                        activeTrackColor = Color.Black,
+                        inactiveTrackColor = Color.Black.copy(alpha = 0.2f)
+                    ),
+                    modifier = Modifier.height(4.dp)
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -216,36 +197,45 @@ fun PlayerScreen(
                     Text(
                         text = formatTime(currentPosition),
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = Color.Black.copy(alpha = 0.6f),
+                        fontFamily = FontFamily.Monospace
                     )
                     Text(
                         text = formatTime(duration),
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f)
+                        color = Color.Black.copy(alpha = 0.6f),
+                        fontFamily = FontFamily.Monospace
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Playback Controls
+            // Playback Controls - Style Spotify
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Speed Control
-                IconButton(
-                    onClick = { audioViewModel.cyclePlaybackSpeed() }
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    shape = CircleShape,
+                    color = Color.Black.copy(alpha = 0.1f)
                 ) {
-                    Text(
-                        text = "${playbackSpeed}x",
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    IconButton(
+                        onClick = { audioViewModel.cyclePlaybackSpeed() }
+                    ) {
+                        Text(
+                            text = "${playbackSpeed}x",
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
                 }
 
                 // Skip Previous
@@ -256,17 +246,16 @@ fun PlayerScreen(
                     Icon(
                         imageVector = Icons.Filled.Replay10,
                         contentDescription = "Skip -10s",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
                     )
                 }
 
-                // Play/Pause Button
+                // Play/Pause Button - Grand bouton rond Spotify
                 Surface(
-                    modifier = Modifier.size(72.dp),
+                    modifier = Modifier.size(64.dp),
                     shape = CircleShape,
-                    color = Color(0xFF6C63FF),
-                    shadowElevation = 8.dp
+                    color = Color.Black
                 ) {
                     IconButton(
                         onClick = {
@@ -282,7 +271,7 @@ fun PlayerScreen(
                             imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                             contentDescription = if (isPlaying) "Pause" else "Play",
                             tint = Color.White,
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 }
@@ -295,22 +284,29 @@ fun PlayerScreen(
                     Icon(
                         imageVector = Icons.Filled.Forward10,
                         contentDescription = "Skip +10s",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        tint = Color.Black,
+                        modifier = Modifier.size(36.dp)
                     )
                 }
 
                 // Timer
-                IconButton(onClick = { /* Sleep timer */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.Timer,
-                        contentDescription = "Timer",
-                        tint = Color.White
-                    )
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    shape = CircleShape,
+                    color = Color.Black.copy(alpha = 0.1f)
+                ) {
+                    IconButton(onClick = { /* Sleep timer */ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Timer,
+                            contentDescription = "Timer",
+                            tint = Color.Black,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

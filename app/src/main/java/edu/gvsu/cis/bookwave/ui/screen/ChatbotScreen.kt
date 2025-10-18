@@ -106,7 +106,7 @@ fun ChatbotScreen(
                         ) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
-                                color = Color(0xFF6B4226)
+                                color = Color(0xFFE67E50)
                             )
                         }
                     }
@@ -128,7 +128,7 @@ fun ChatbotScreen(
                         .padding(end = 8.dp),
                     placeholder = { Text("Ask about audiobooks...") },
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF6B4226),
+                        focusedBorderColor = Color(0xFFE67E50),
                         unfocusedBorderColor = Color(0xFF8B7355),
                         focusedContainerColor = Color.White,
                         unfocusedContainerColor = Color.White
@@ -146,7 +146,7 @@ fun ChatbotScreen(
                             }
                         }
                     },
-                    containerColor = Color(0xFF6B4226),
+                    containerColor = Color(0xFFE67E50),
                     contentColor = Color.White
                 ) {
                     Icon(
@@ -166,7 +166,7 @@ fun MessageBubble(message: String, isUser: Boolean) {
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
     ) {
         Surface(
-            color = if (isUser) Color(0xFF6B4226) else Color.White,
+            color = if (isUser) Color(0xFFE67E50) else Color.White,
             shape = RoundedCornerShape(
                 topStart = 16.dp,
                 topEnd = 16.dp,
