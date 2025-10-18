@@ -216,7 +216,7 @@ fun LoginScreen(navController: NavController) {
                     textDecoration = TextDecoration.Underline
                 ),
                 modifier = Modifier
-                    .clickable {  }
+                    .clickable { navController.navigate(Routes.SIGNUP_SCREEN) }
             )
 
         }

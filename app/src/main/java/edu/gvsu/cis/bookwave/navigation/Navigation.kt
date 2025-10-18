@@ -71,5 +71,10 @@ fun Nav() {
         composable(route = Routes.CHATBOT_SCREEN) {
             ChatbotScreen(navController)
         }
+
+        composable(route = Routes.SIGNUP_SCREEN) {
+            SignUpScreen(navController)
+        }
+
     }
 }

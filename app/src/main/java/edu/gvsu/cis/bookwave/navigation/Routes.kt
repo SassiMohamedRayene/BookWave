@@ -11,4 +11,5 @@ object Routes {
     const val CHATBOT_SCREEN = "chatbot_screen"
     const val ACCOUNT_SCREEN = "account_screen"
     const val CHAT_SCREEN = "chat_screen"
+    const val SIGNUP_SCREEN = "signup_screen"
 }
