@@ -26,22 +26,69 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import edu.gvsu.cis.bookwave.R
 import edu.gvsu.cis.bookwave.navigation.Routes
+import edu.gvsu.cis.bookwave.viewmodel.AuthState
+import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel()
+) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
-    val backgroundColor = Color(0xFFF5E6D3) // Beige color
-    val buttonColor = Color(0xFFE67E50) // Orange color
-    val textColor = Color(0xFF2D2D2D) // Dark gray
+    val backgroundColor = Color(0xFFF5E6D3)
+    val buttonColor = Color(0xFFE67E50)
+    val textColor = Color(0xFF2D2D2D)
+
+    // Observe auth state
+    val authState = authViewModel.authState
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Success -> {
+                // Navigate to home on successful signup
+                navController.navigate(Routes.HOME_SCREEN) {
+                    popUpTo(Routes.SIGNUP_SCREEN) { inclusive = true }
+                }
+                authViewModel.resetAuthState()
+            }
+            else -> {}
+        }
+    }
+
+    // Show error or loading dialogs
+    when (authState) {
+        is AuthState.Error -> {
+            AlertDialog(
+                onDismissRequest = { authViewModel.resetAuthState() },
+                title = { Text("Error") },
+                text = { Text(authState.message) },
+                confirmButton = {
+                    TextButton(onClick = { authViewModel.resetAuthState() }) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
+        is AuthState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = buttonColor)
+            }
+        }
+        else -> {}
+    }
 
     Box(
         modifier = Modifier
@@ -56,7 +103,6 @@ fun SignUpScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Title
             Text(
                 text = "Sign Up",
                 style = TextStyle(
@@ -68,7 +114,6 @@ fun SignUpScreen(navController: NavController) {
                 ),
             )
 
-            // Subtitle
             Text(
                 text = "Create your account to access\nthousands of audiobooks",
                 style = TextStyle(
@@ -85,24 +130,23 @@ fun SignUpScreen(navController: NavController) {
                 text = "Continue with Google",
                 icon = "G",
                 iconColor = Color(0xFF4285F4),
-                onClick = {}
+                onClick = { /* TODO: Implement Google Sign In */ }
             )
 
             SocialSignInButton(
                 text = "Continue with Facebook",
                 icon = "f",
                 iconColor = Color(0xFF1877F2),
-                onClick = {}
+                onClick = { /* TODO: Implement Facebook Sign In */ }
             )
 
             SocialSignInButton(
                 text = "Continue with Apple",
                 icon = "",
                 iconColor = Color.Black,
-                onClick = {}
+                onClick = { /* TODO: Implement Apple Sign In */ }
             )
 
-            // Divider with text
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,7 +173,6 @@ fun SignUpScreen(navController: NavController) {
                 )
             }
 
-            // Username Input
             CustomTextField(
                 value = username,
                 onValueChange = { username = it },
@@ -137,7 +180,6 @@ fun SignUpScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Email Input
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -145,7 +187,6 @@ fun SignUpScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Password Input
             CustomTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -156,24 +197,11 @@ fun SignUpScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Confirm Password Input
-            CustomTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                placeholder = "Confirm Password",
-                isPassword = true,
-                passwordVisible = confirmPasswordVisible,
-                onPasswordVisibilityToggle = { confirmPasswordVisible = !confirmPasswordVisible },
-                modifier = Modifier.fillMaxWidth()
-            )
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Sign Up Button
             Button(
                 onClick = {
-                    // TODO: Add Firebase sign up logic here
-                    navController.navigate(Routes.HOME_SCREEN)
+                    authViewModel.signUp(username, email, password)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -182,7 +210,8 @@ fun SignUpScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonColor,
                     contentColor = Color.White
-                )
+                ),
+                enabled = authState !is AuthState.Loading
             ) {
                 Text(
                     text = "Sign Up",
@@ -195,7 +224,6 @@ fun SignUpScreen(navController: NavController) {
                 )
             }
 
-            // Navigate to Login
             Text(
                 text = "Already have an account? Login",
                 style = TextStyle(

@@ -6,10 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import edu.gvsu.cis.bookwave.navigation.Nav
 import edu.gvsu.cis.bookwave.ui.theme.BookWaveTheme
+import com.google.firebase.auth.FirebaseAuth
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             BookWaveTheme {

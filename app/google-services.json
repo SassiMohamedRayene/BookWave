@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640700716693",
+    "project_id": "bookwave-c316a",
+    "storage_bucket": "bookwave-c316a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640700716693:android:e91eea6bbffd03c45bed9c",
+        "android_client_info": {
+          "package_name": "edu.gvsu.cis.bookwave"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWJ5dBIhbgMq4l67WcPZVje_Fun_XFWss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

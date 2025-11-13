@@ -12,6 +12,6 @@ data class Book(
     val rating: Float = 0f,
     val publishedYear: Int,
     val isFavorite: Boolean = false,
-    val coverImageRes: Int
+    val coverImageRes: Int,
 )
 

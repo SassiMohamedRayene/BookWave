@@ -11,9 +11,7 @@ import kotlinx.coroutines.launch
 
 class BooksViewModel : ViewModel() {
 
-    // État privé mutable
     private val _books = MutableStateFlow(BooksData.myBooks.toMutableList())
-    // État public en lecture seule
     val books: StateFlow<List<Book>> = _books.asStateFlow()
 
     // Liste des livres favoris

@@ -50,19 +50,69 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import edu.gvsu.cis.bookwave.R
 import edu.gvsu.cis.bookwave.navigation.Routes
+import edu.gvsu.cis.bookwave.viewmodel.AuthState
+import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
+
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel()
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val backgroundColor = Color(0xFFF5E6D3) // Beige color
-    val buttonColor = Color(0xFFE67E50) // Orange color
-    val textColor = Color(0xFF2D2D2D) // Dark gray
+    val backgroundColor = Color(0xFFF5E6D3)
+    val buttonColor = Color(0xFFE67E50)
+    val textColor = Color(0xFF2D2D2D)
+
+    // Observe auth state
+    val authState = authViewModel.authState
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Success -> {
+                // Navigate to home on successful login
+                navController.navigate(Routes.HOME_SCREEN) {
+                    popUpTo(Routes.LOGIN_SCREEN) { inclusive = true }
+                }
+                authViewModel.resetAuthState()
+            }
+            else -> {}
+        }
+    }
+
+    // Show error or loading dialogs
+    when (authState) {
+        is AuthState.Error -> {
+            AlertDialog(
+                onDismissRequest = { authViewModel.resetAuthState() },
+                title = { Text("Error") },
+                text = { Text(authState.message) },
+                confirmButton = {
+                    TextButton(onClick = { authViewModel.resetAuthState() }) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
+        is AuthState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = buttonColor)
+            }
+        }
+        else -> {}
+    }
 
     Box(
         modifier = Modifier
@@ -77,7 +127,6 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Title
             Text(
                 text = "Login",
                 style = TextStyle(
@@ -90,7 +139,6 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Subtitle
             Text(
                 text = "One subscription for Litverse,\nRecognotes, and Sparks",
                 style = TextStyle(
@@ -107,24 +155,23 @@ fun LoginScreen(navController: NavController) {
                 text = "Continue with Google",
                 icon = "G",
                 iconColor = Color(0xFF4285F4),
-                onClick = {}
+                onClick = { /* TODO: Implement Google Sign In */ }
             )
 
             SocialSignInButton(
                 text = "Continue with Facebook",
                 icon = "f",
                 iconColor = Color(0xFF1877F2),
-                onClick = {}
+                onClick = { /* TODO: Implement Facebook Sign In */ }
             )
 
             SocialSignInButton(
                 text = "Continue with Apple",
                 icon = "",
                 iconColor = Color.Black,
-                onClick = {}
+                onClick = { /* TODO: Implement Apple Sign In */ }
             )
 
-            // Divider with text
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,16 +198,13 @@ fun LoginScreen(navController: NavController) {
                 )
             }
 
-            // Email Input
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
                 placeholder = "Email address",
                 modifier = Modifier.fillMaxWidth()
-
             )
 
-            // Password Input
             CustomTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -171,7 +215,6 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Recovery Password Link
             Text(
                 text = "Recovery Password",
                 style = TextStyle(
@@ -181,14 +224,15 @@ fun LoginScreen(navController: NavController) {
                 ),
                 modifier = Modifier
                     .align(Alignment.End)
-                    .clickable {  }
+                    .clickable { /* TODO: Implement password recovery */ }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Continue Button
             Button(
-                onClick = { navController.navigate(Routes.HOME_SCREEN) },
+                onClick = {
+                    authViewModel.login(email, password)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -196,7 +240,8 @@ fun LoginScreen(navController: NavController) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonColor,
                     contentColor = Color.White
-                )
+                ),
+                enabled = authState !is AuthState.Loading
             ) {
                 Text(
                     text = "Continue",
@@ -208,6 +253,7 @@ fun LoginScreen(navController: NavController) {
                     )
                 )
             }
+
             Text(
                 text = "Don't have Account? SignUp",
                 style = TextStyle(
@@ -218,7 +264,6 @@ fun LoginScreen(navController: NavController) {
                 modifier = Modifier
                     .clickable { navController.navigate(Routes.SIGNUP_SCREEN) }
             )
-
         }
     }
 }

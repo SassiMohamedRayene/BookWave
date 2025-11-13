@@ -8,19 +8,32 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.gvsu.cis.bookwave.ui.screen.*
+import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
 import edu.gvsu.cis.bookwave.viewmodel.BooksViewModel
 import edu.gvsu.cis.bookwave.viewmodel.MessageViewModel
 
 @Composable
 fun Nav() {
     val navController = rememberNavController()
+    val authViewModel: AuthViewModel = viewModel()
     val booksViewModel: BooksViewModel = viewModel()
-    val messageViewModel: MessageViewModel = viewModel()  // NOUVEAU
+    val messageViewModel: MessageViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = Routes.LOGIN_SCREEN) {
+    // Determine start destination based on auth state
+    val startDestination = if (authViewModel.currentUser != null) {
+        Routes.HOME_SCREEN
+    } else {
+        Routes.LOGIN_SCREEN
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
 
         composable(route = Routes.LOGIN_SCREEN) {
-            LoginScreen(navController)
+            LoginScreen(navController, authViewModel)
+        }
+
+        composable(route = Routes.SIGNUP_SCREEN) {
+            SignUpScreen(navController, authViewModel)
         }
 
         composable(route = Routes.HOME_SCREEN) {
@@ -28,7 +41,7 @@ fun Nav() {
         }
 
         composable(route = Routes.ACCOUNT_SCREEN) {
-            AccountScreen(navController)
+            AccountScreen(navController, authViewModel)
         }
 
         composable(route = Routes.SEARCH_SCREEN) {
@@ -40,10 +53,9 @@ fun Nav() {
         }
 
         composable(route = Routes.MESSAGE_SCREEN) {
-            MessageScreen(navController, messageViewModel)  // MODIFIÉ
+            MessageScreen(navController, messageViewModel)
         }
 
-        // NOUVEAU: Route pour le Chat Screen
         composable(
             route = "${Routes.CHAT_SCREEN}/{userId}",
             arguments = listOf(navArgument("userId") { type = NavType.IntType })
@@ -71,10 +83,5 @@ fun Nav() {
         composable(route = Routes.CHATBOT_SCREEN) {
             ChatbotScreen(navController)
         }
-
-        composable(route = Routes.SIGNUP_SCREEN) {
-            SignUpScreen(navController)
-        }
-
     }
 }
