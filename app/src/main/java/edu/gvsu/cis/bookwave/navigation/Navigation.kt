@@ -83,5 +83,9 @@ fun Nav() {
         composable(route = Routes.CHATBOT_SCREEN) {
             ChatbotScreen(navController)
         }
+
+        composable(route = Routes.EDIT_PROFILE_SCREEN) {
+            EditProfileScreen(navController, authViewModel)
+        }
     }
 }

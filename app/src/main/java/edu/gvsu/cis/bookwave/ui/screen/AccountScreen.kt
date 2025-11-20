@@ -3,6 +3,7 @@ package edu.gvsu.cis.bookwave.ui.screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import edu.gvsu.cis.bookwave.R
 import edu.gvsu.cis.bookwave.navigation.Routes
 import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
@@ -88,19 +91,32 @@ fun AccountScreen(
                         .background(Color.White, CircleShape)
                         .padding(4.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.eminem),
-                        contentDescription = "Profile picture",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape)
-                    )
+                    if (authViewModel.profileImageUrl != null) {
+                        AsyncImage(
+                            model = authViewModel.profileImageUrl,
+                            contentDescription = "Profile picture",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            placeholder = painterResource(id = R.drawable.eminem),
+                            error = painterResource(id = R.drawable.eminem)
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.eminem),
+                            contentDescription = "Default profile picture",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Username from Firebase
+                // Username
                 Text(
                     text = user?.displayName ?: "User",
                     style = TextStyle(
@@ -114,7 +130,7 @@ fun AccountScreen(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Email from Firebase
+                // Email
                 Text(
                     text = user?.email ?: "email@bookwave.com",
                     fontSize = 14.sp,
@@ -214,9 +230,11 @@ fun AccountScreen(
                         .padding(horizontal = 20.dp)
                 ) {
                     SettingItem(
-                        icon = Icons.Default.Person,
+                        icon = Icons.Default.Edit,
                         title = "Edit Profile",
-                        onClick = { /* TODO */ }
+                        onClick = {
+                            navController.navigate(Routes.EDIT_PROFILE_SCREEN)
+                        }
                     )
 
                     SettingItem(

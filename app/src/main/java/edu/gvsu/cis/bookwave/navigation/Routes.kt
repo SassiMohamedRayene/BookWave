@@ -12,4 +12,5 @@ object Routes {
     const val ACCOUNT_SCREEN = "account_screen"
     const val CHAT_SCREEN = "chat_screen"
     const val SIGNUP_SCREEN = "signup_screen"
+    const val EDIT_PROFILE_SCREEN = "edit_profile_screen"
 }
