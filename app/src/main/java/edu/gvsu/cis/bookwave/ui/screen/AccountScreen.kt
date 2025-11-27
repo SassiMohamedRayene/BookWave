@@ -54,7 +54,7 @@ fun AccountScreen(
                     },
                     title = {
                         Text(
-                            text = "My Profile",
+                            text = "Profil",
                             style = TextStyle(
                                 fontSize = 28.sp,
                                 color = Color.Black,
@@ -82,7 +82,7 @@ fun AccountScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(150.dp))
 
                 // Profile picture
                 Box(
@@ -99,12 +99,12 @@ fun AccountScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(CircleShape),
-                            placeholder = painterResource(id = R.drawable.eminem),
-                            error = painterResource(id = R.drawable.eminem)
+                            placeholder = painterResource(id = R.drawable.prof),
+                            error = painterResource(id = R.drawable.prof)
                         )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.eminem),
+                            painter = painterResource(id = R.drawable.prof),
                             contentDescription = "Default profile picture",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -138,71 +138,10 @@ fun AccountScreen(
                     fontFamily = FontFamily.Monospace
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(150.dp))
             }
 
-            item {
-                // Statistics
-                Text(
-                    text = "Statistics",
-                    style = TextStyle(
-                        fontSize = 22.sp,
-                        color = Color.Black,
-                        fontFamily = FontFamily.Monospace,
-                        letterSpacing = (-0.5).sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    StatCard(
-                        title = "Books Listened",
-                        value = "24",
-                        icon = Icons.Default.Headphones,
-                        modifier = Modifier.weight(1f)
-                    )
-                    StatCard(
-                        title = "Listening Time",
-                        value = "156h",
-                        icon = Icons.Default.Schedule,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    StatCard(
-                        title = "Favorites",
-                        value = "12",
-                        icon = Icons.Default.Favorite,
-                        modifier = Modifier.weight(1f)
-                    )
-                    StatCard(
-                        title = "Subscription",
-                        value = "Premium",
-                        icon = Icons.Default.Star,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-            }
 
             item {
                 // Settings
@@ -243,17 +182,6 @@ fun AccountScreen(
                         onClick = { /* TODO */ }
                     )
 
-                    SettingItem(
-                        icon = Icons.Default.Settings,
-                        title = "Preferences",
-                        onClick = { /* TODO */ }
-                    )
-
-                    SettingItem(
-                        icon = Icons.Default.Help,
-                        title = "Help & Support",
-                        onClick = { /* TODO */ }
-                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

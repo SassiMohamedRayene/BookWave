@@ -30,7 +30,7 @@ object BooksData {
             category = "Dystopian",
             rating = 4.8f,
             publishedYear = 1949,
-            isFavorite = true,
+            isFavorite = false,
             coverImageRes = R.drawable.book_cover
         ),
         Book(
@@ -58,7 +58,7 @@ object BooksData {
             category = "Romance",
             rating = 4.6f,
             publishedYear = 1813,
-            isFavorite = true,
+            isFavorite = false,
             coverImageRes = R.drawable.coverbook1
         ),
         Book(

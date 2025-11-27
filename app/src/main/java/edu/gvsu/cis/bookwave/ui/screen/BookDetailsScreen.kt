@@ -272,33 +272,6 @@ fun BookDetailsScreen(
                             )
                         }
 
-                        OutlinedButton(
-                            onClick = { /* Add to library */ },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                contentColor = Color.Black
-                            ),
-                            border = ButtonDefaults.outlinedButtonBorder.copy(
-                                width = 2.dp,
-                                brush = Brush.linearGradient(listOf(Color.Black, Color.Black))
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                "Library",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))

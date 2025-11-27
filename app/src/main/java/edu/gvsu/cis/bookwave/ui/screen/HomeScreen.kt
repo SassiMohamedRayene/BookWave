@@ -102,7 +102,7 @@ fun HomeScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Image(
-                                    painter = painterResource(id = R.drawable.eminem),
+                                    painter = painterResource(id = R.drawable.prof),
                                     contentDescription = "Profile",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
@@ -258,7 +258,7 @@ fun NavigationDrawerContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.eminem),
+                    painter = painterResource(id = R.drawable.prof),
                     contentDescription = "Profile",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -318,14 +318,7 @@ fun NavigationDrawerContent(
                 }
             )
 
-            DrawerNavigationItem(
-                icon = Icons.Default.Settings,
-                label = "Settings",
-                onClick = {
 
-                    onCloseDrawer()
-                }
-            )
 
             Spacer(modifier = Modifier.weight(1f))
 

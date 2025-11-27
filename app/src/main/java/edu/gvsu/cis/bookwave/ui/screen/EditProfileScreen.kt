@@ -149,12 +149,12 @@ fun EditProfileScreen(
                             .clip(CircleShape)
                             .border(4.dp, Color.White, CircleShape),
                         contentScale = ContentScale.Crop,
-                        placeholder = painterResource(id = R.drawable.eminem),
-                        error = painterResource(id = R.drawable.eminem)
+                        placeholder = painterResource(id = R.drawable.prof),
+                        error = painterResource(id = R.drawable.prof)
                     )
                 } else {
                     Image(
-                        painter = painterResource(id = R.drawable.eminem),
+                        painter = painterResource(id = R.drawable.prof),
                         contentDescription = "Default profile picture",
                         modifier = Modifier
                             .fillMaxSize()
