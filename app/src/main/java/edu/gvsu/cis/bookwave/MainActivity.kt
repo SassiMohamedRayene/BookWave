@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import edu.gvsu.cis.bookwave.navigation.Nav
+import edu.gvsu.cis.bookwave.navigation.NavWithFirebase
 import edu.gvsu.cis.bookwave.ui.theme.BookWaveTheme
 import com.google.firebase.auth.FirebaseAuth
 import edu.gvsu.cis.bookwave.ui.utils.RequestNotificationPermission
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BookWaveTheme {
                 RequestNotificationPermission()
-                Nav()
+                NavWithFirebase()
             }
         }
     }

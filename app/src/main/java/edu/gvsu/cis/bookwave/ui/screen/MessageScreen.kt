@@ -1,14 +1,12 @@
 package edu.gvsu.cis.bookwave.ui.screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -18,32 +16,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import edu.gvsu.cis.bookwave.R
-import edu.gvsu.cis.bookwave.data.model.Conversation
+import coil.compose.AsyncImage
+import edu.gvsu.cis.bookwave.data.model.FirebaseConversation
 import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
 import edu.gvsu.cis.bookwave.navigation.Routes
-import edu.gvsu.cis.bookwave.viewmodel.MessageViewModel
+import edu.gvsu.cis.bookwave.viewmodel.FirebaseMessageViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MessageScreen(
+fun FirebaseMessageScreen(
     navController: NavController,
-    viewModel: MessageViewModel = viewModel()
+    viewModel: FirebaseMessageViewModel
 ) {
     val conversations by viewModel.conversations.collectAsState()
+    val availableUsers by viewModel.availableUsers.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
 
@@ -162,16 +158,43 @@ fun MessageScreen(
                             fontFamily = FontFamily.Monospace
                         )
                     )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Afficher les utilisateurs disponibles
+                    if (availableUsers.isNotEmpty()) {
+                        Text(
+                            text = "Available users:",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        LazyColumn {
+                            items(availableUsers) { user ->
+                                UserItem(
+                                    user = user,
+                                    onClick = {
+                                        navController.navigate("${Routes.CHAT_SCREEN}/${user.uid}")
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(conversations) { conversation ->
-                        ConversationItem(
+                        FirebaseConversationItem(
                             conversation = conversation,
                             onClick = {
-                                navController.navigate("${Routes.CHAT_SCREEN}/${conversation.user.id}")
+                                navController.navigate("${Routes.CHAT_SCREEN}/${conversation.user.uid}")
                             }
                         )
                         HorizontalDivider(
@@ -187,8 +210,8 @@ fun MessageScreen(
 }
 
 @Composable
-fun ConversationItem(
-    conversation: Conversation,
+fun FirebaseConversationItem(
+    conversation: FirebaseConversation,
     onClick: () -> Unit
 ) {
     Row(
@@ -199,22 +222,32 @@ fun ConversationItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Avatar
-        Box(
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(Color(0xFFE67E50)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = conversation.user.username.first().uppercase(),
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    fontFamily = FontFamily.Monospace
-                )
+        if (conversation.user.profileImageUrl.isNotEmpty()) {
+            AsyncImage(
+                model = conversation.user.profileImageUrl,
+                contentDescription = "Profile picture",
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFE67E50)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = conversation.user.username.firstOrNull()?.uppercase() ?: "?",
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontFamily = FontFamily.Monospace
+                    )
+                )
+            }
         }
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -293,6 +326,59 @@ fun ConversationItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun UserItem(
+    user: edu.gvsu.cis.bookwave.data.model.FirebaseUser,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (user.profileImageUrl.isNotEmpty()) {
+            AsyncImage(
+                model = user.profileImageUrl,
+                contentDescription = "Profile picture",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFE67E50)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = user.username.firstOrNull()?.uppercase() ?: "?",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontFamily = FontFamily.Monospace
+                    )
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Text(
+            text = user.username,
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontFamily = FontFamily.Monospace
+            )
+        )
     }
 }
 

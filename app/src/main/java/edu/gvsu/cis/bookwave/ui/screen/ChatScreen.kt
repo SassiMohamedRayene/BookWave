@@ -22,11 +22,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import edu.gvsu.cis.bookwave.data.model.FakeUserData
-import edu.gvsu.cis.bookwave.data.model.Message
-import edu.gvsu.cis.bookwave.viewmodel.MessageViewModel
+import coil.compose.AsyncImage
+import com.google.firebase.auth.FirebaseAuth
+import edu.gvsu.cis.bookwave.data.model.FirebaseMessage
+import edu.gvsu.cis.bookwave.viewmodel.FirebaseMessageViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,16 +34,17 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ChatScreen(
+fun FirebaseChatScreen(
     navController: NavController,
-    userId: Int,
-    viewModel: MessageViewModel = viewModel()
+    userId: String,
+    viewModel: FirebaseMessageViewModel
 ) {
     val messages by viewModel.currentMessages.collectAsState()
     val currentUser by viewModel.currentChatUser.collectAsState()
     var messageText by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
     // Charger les messages pour cet utilisateur
     LaunchedEffect(userId) {
@@ -76,22 +77,32 @@ fun ChatScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(0xFFE67E50)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = currentUser?.username?.first()?.uppercase() ?: "",
-                                    style = TextStyle(
-                                        fontSize = 18.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White,
-                                        fontFamily = FontFamily.Monospace
-                                    )
+                            if (currentUser?.profileImageUrl?.isNotEmpty() == true) {
+                                AsyncImage(
+                                    model = currentUser?.profileImageUrl,
+                                    contentDescription = "Profile picture",
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape)
                                 )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFE67E50)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = currentUser?.username?.firstOrNull()?.uppercase() ?: "",
+                                        style = TextStyle(
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color.White,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
@@ -132,9 +143,9 @@ fun ChatScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(messages) { message ->
-                    MessageBubble(
+                    FirebaseMessageBubble(
                         message = message,
-                        isCurrentUser = message.senderId == FakeUserData.currentUser.id
+                        isCurrentUser = message.senderId == currentUserId
                     )
                 }
             }
@@ -201,8 +212,8 @@ fun ChatScreen(
 }
 
 @Composable
-fun MessageBubble(
-    message: Message,
+fun FirebaseMessageBubble(
+    message: FirebaseMessage,
     isCurrentUser: Boolean
 ) {
     Column(

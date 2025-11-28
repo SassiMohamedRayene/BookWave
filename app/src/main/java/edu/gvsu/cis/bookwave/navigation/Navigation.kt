@@ -10,14 +10,14 @@ import androidx.navigation.navArgument
 import edu.gvsu.cis.bookwave.ui.screen.*
 import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
 import edu.gvsu.cis.bookwave.viewmodel.BooksViewModel
-import edu.gvsu.cis.bookwave.viewmodel.MessageViewModel
+import edu.gvsu.cis.bookwave.viewmodel.FirebaseMessageViewModel
 
 @Composable
-fun Nav() {
+fun NavWithFirebase() {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel()
     val booksViewModel: BooksViewModel = viewModel()
-    val messageViewModel: MessageViewModel = viewModel()
+    val firebaseMessageViewModel: FirebaseMessageViewModel = viewModel()
 
     // Determine start destination based on auth state
     val startDestination = if (authViewModel.currentUser != null) {
@@ -52,16 +52,18 @@ fun Nav() {
             FavoriteScreen(navController, booksViewModel)
         }
 
+        // Version Firebase de MessageScreen
         composable(route = Routes.MESSAGE_SCREEN) {
-            MessageScreen(navController, messageViewModel)
+            FirebaseMessageScreen(navController, firebaseMessageViewModel)
         }
 
+        // Version Firebase de ChatScreen avec String userId au lieu de Int
         composable(
             route = "${Routes.CHAT_SCREEN}/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getInt("userId") ?: 0
-            ChatScreen(navController, userId, messageViewModel)
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            FirebaseChatScreen(navController, userId, firebaseMessageViewModel)
         }
 
         composable(

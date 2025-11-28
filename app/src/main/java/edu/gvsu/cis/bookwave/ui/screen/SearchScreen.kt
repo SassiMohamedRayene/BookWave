@@ -47,18 +47,18 @@ fun SearchScreen(
     // Liste des catégories
     val categories = listOf(
         Category("All", Icons.Filled.Menu),
+        Category("Romance", Icons.Filled.Favorite),
+        Category("Classic", Icons.Filled.MenuBook),
+        Category("Dystopian", Icons.Filled.Warning),
         Category("Career & Growth", Icons.Filled.TrendingUp),
         Category("Business", Icons.Filled.Business),
         Category("Finance & Money Management", Icons.Filled.AccountBalance),
         Category("Contemporary Fiction", Icons.Filled.Book),
-        Category("Romance", Icons.Filled.Favorite),
         Category("Politics", Icons.Filled.Gavel),
         Category("Mystery & Crime Fiction", Icons.Filled.Search),
         Category("Sport & Recreation", Icons.Filled.SportsBaseball),
         Category("Social Science", Icons.Filled.School),
-        Category("Classic", Icons.Filled.MenuBook),
-        Category("Dystopian", Icons.Filled.Warning),
-        Category("Fantasy", Icons.Filled.Castle)
+        Category("War", Icons.Filled.LocalFireDepartment),
     )
 
     // Filtrer les livres

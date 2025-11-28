@@ -170,5 +170,7 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging:25.0.1")
 
 
+    // Coil pour le chargement d'images (pour les photos de profil)
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
 }
