@@ -38,12 +38,13 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         try {
             // Mapper chaque audioUrl vers le fichier correspondant dans res/raw
             val audioResource = when(audioUrl) {
-                "audio_1984.mp3" -> R.raw.audio_1984
-                "audio_mockingbird.mp3" -> R.raw.audio_mockingbird
-                "audio_pride.mp3" -> R.raw.audio_pride
-                "audio_hobbit.mp3" -> R.raw.audio_hobbit
                 "art_of_war.mp3" -> R.raw.art_of_war
                 "awakening.mp3" -> R.raw.awakening
+                "ivanhoe.mp3" -> R.raw.ivanhoe
+                "twentyyearsafter.mp3" -> R.raw.ivanhoe
+                "wutheringheights.mp3" -> R.raw.wutheringheights
+                "oliver_twist.mp3" -> R.raw.wutheringheights
+
 
                 else -> {
                     // Fichier par défaut si aucun match

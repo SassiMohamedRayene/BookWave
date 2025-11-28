@@ -37,7 +37,7 @@ fun NavWithFirebase() {
         }
 
         composable(route = Routes.HOME_SCREEN) {
-            HomeScreen(navController, booksViewModel)
+            HomeScreen(navController, authViewModel, booksViewModel)
         }
 
         composable(route = Routes.ACCOUNT_SCREEN) {

@@ -33,10 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import edu.gvsu.cis.bookwave.R
 import edu.gvsu.cis.bookwave.navigation.BottomNavigationBar
 import edu.gvsu.cis.bookwave.navigation.Routes
 import edu.gvsu.cis.bookwave.ui.components.BooksLazyRow
+import edu.gvsu.cis.bookwave.viewmodel.AuthViewModel
 import edu.gvsu.cis.bookwave.viewmodel.BooksViewModel
 import kotlinx.coroutines.launch
 
@@ -45,6 +47,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavController,
+    authViewModel: AuthViewModel,
     viewModel: BooksViewModel = viewModel()
 ) {
     val books by viewModel.books.collectAsState()
@@ -101,16 +104,32 @@ fun HomeScreen(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.prof),
-                                    contentDescription = "Profile",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp)
-                                        .size(40.dp)
-                                        .clip(CircleShape)
-                                        .clickable { navController.navigate(Routes.ACCOUNT_SCREEN) }
-                                )
+                                // Remplacer cette partie
+                                if (authViewModel.profileImageUrl != null) {
+                                    AsyncImage(
+                                        model = authViewModel.profileImageUrl,
+                                        contentDescription = "Profile",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .size(40.dp)
+                                            .clip(CircleShape)
+                                            .clickable { navController.navigate(Routes.ACCOUNT_SCREEN) },
+                                        placeholder = painterResource(id = R.drawable.prof),
+                                        error = painterResource(id = R.drawable.prof)
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.prof),
+                                        contentDescription = "Profile",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp)
+                                            .size(40.dp)
+                                            .clip(CircleShape)
+                                            .clickable { navController.navigate(Routes.ACCOUNT_SCREEN) }
+                                    )
+                                }
                             }
                         },
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
