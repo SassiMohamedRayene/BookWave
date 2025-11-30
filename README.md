@@ -46,11 +46,6 @@ BookWave is designed to go beyond a simple audiobook player and become a complet
 **Firebase Cloud Messaging** – Push notifications
 
 
-## 🚧 **Project Status**
-
-⚠️ This project is currently under development.
-Some features may still evolve as the application grows.
-
 ---
 👨‍💻 **Author**
 Mohamed Rayene Sassi
