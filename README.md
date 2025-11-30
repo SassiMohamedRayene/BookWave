@@ -48,5 +48,7 @@ BookWave is designed to go beyond a simple audiobook player and become a complet
 
 ---
 👨‍💻 **Author**
+
 Mohamed Rayene Sassi
+
 Academic Android Project – Jetpack Compose
