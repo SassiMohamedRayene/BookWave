@@ -46,9 +46,26 @@ BookWave is designed to go beyond a simple audiobook player and become a complet
 **Firebase Cloud Messaging** – Push notifications
 
 
+
+## ✨ **Resources**
+**Tutorial**
+[Read the full tutorial on Medium](https://sassimohamedrayene.github.io/BookwaveTutorial.github.io/)
+
+**Presentation**
+[View presentation slides](https://docs.google.com/presentation/d/1V929n_7FgW_bpgYOhnLfFTSTEFNQpxFW/edit?usp=sharing&ouid=108482888690171956790&rtpof=true&sd=true)
+
+**Video Presentation**
+[Watch on YouTube](https://www.youtube.com/watch?v=gSWN50cu3rs)
+
+
+
+
 ---
 👨‍💻 **Author**
 
 Mohamed Rayene Sassi
 
 Academic Android Project – Jetpack Compose
+
+
+
