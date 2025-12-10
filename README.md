@@ -69,3 +69,12 @@ Academic Android Project – Jetpack Compose
 
 
 
+## APK for Class Demo
+
+The APK file is too large for GitHub.
+
+Download link:
+https://drive.google.com/file/d/1ITblxY6hDkzVIa01zZZ7jk3srO8es6AN/view?usp=drive_link
+
+
+
